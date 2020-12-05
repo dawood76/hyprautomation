@@ -1,7 +1,7 @@
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium import webdriver
 from webdriver_manager.utils import ChromeType
-
+from selenium.webdriver.chrome.options import Options
 
 def get_chrome():
     chrome_options = Options()
