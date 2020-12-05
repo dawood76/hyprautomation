@@ -25,7 +25,7 @@ class Test_login():
         self.login.click_sign_in()
         self.login.validate_user_can_login_with_valid_creds()
         assert True
-        time.sleep(10)
+        
 
     def test_user_sign_in_with_invalid_creds(self, setup):
         self.login.input_email("stageadmin.hypr.pk")
