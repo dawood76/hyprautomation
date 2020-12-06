@@ -29,3 +29,8 @@ class loginPage(basePage):
 
     def validate_user_can_login_with_valid_creds(self):
         self.dashboard.validate_dashboard_page_title()
+
+    def user_login(self, email, password):
+        self.input_email(email)
+        self.input_password(password)
+        self.click_sign_in()

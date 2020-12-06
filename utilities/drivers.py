@@ -4,7 +4,9 @@ from webdriver_manager.utils import ChromeType
 
 
 def get_chrome():
-    return webdriver.Chrome(ChromeDriverManager(chrome_type=ChromeType.GOOGLE).install())
+    driver = webdriver.Chrome(ChromeDriverManager(chrome_type=ChromeType.GOOGLE).install())
+    driver.maximize_window()
+    return driver
 
 
 def switch_browser(browser):

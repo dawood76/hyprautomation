@@ -5,8 +5,11 @@ from pytest import fixture
 def pytest_addoption(parser):
     parser.addoption(
         "--browser",
+         action="store"
+    )
+    parser.addoption(
         "--baseurl",
-        action="store"
+         action="store"
     )
 
 @pytest.fixture(scope="session", autouse=True)
@@ -15,6 +18,5 @@ def browser(request):
     #request.addfinalizer(finalizer_function)
 
 @pytest.fixture(scope="session", autouse=True)
-def base_url(request):
+def baseurl(request):
     return request.config.getoption("--baseurl")
-    #request.addfinalizer(finalizer_function)
