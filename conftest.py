@@ -11,6 +11,10 @@ def pytest_addoption(parser):
         "--baseurl",
          action="store"
     )
+    parser.addoption(
+        "--adminbaseurl",
+        action="store"
+    )
 
 @pytest.fixture(scope="session", autouse=True)
 def browser(request):
@@ -20,3 +24,7 @@ def browser(request):
 @pytest.fixture(scope="session", autouse=True)
 def baseurl(request):
     return request.config.getoption("--baseurl")
+
+@pytest.fixture(scope="session", autouse=True)
+def adminbaseurl(request):
+    return request.config.getoption("--adminbaseurl")
