@@ -1,0 +1,449 @@
+{
+	"info": {
+		"_postman_id": "ebc9ece7-42e5-4249-a19b-93d936ed8789",
+		"name": "admin_tests",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "create_data Copy",
+			"item": [
+				{
+					"name": "create_super_admin",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "f503205d-b0d1-4592-8ca9-f575c4b94ac3",
+								"exec": [
+									"adminEmail = pm.variables.replaceIn('{{$randomEmail}}')",
+									"adminPassword = pm.variables.replaceIn('{{$randomPassword}}')",
+									"",
+									"adminEmail = \"admin@hypr.pk\"",
+									"adminPassword = \"12345678\"",
+									"console.log(adminEmail)",
+									"pm.environment.set(\"adminEmail\", adminEmail);",
+									"pm.environment.set(\"adminPassword\", adminPassword)"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "9b7024e6-eedc-42c1-827c-169d7a0f4d35",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"address\": \"12323\",\n    \"cnic\": \"123121113123\",\n    \"cnic_picture\": \"\",\n    \"confirmPassword\": \"{{adminPassword}}\",\n    \"name\": \"test\",\n    \"password\": \"{{adminPassword}}\",\n    \"phone\": \"09007860133\",\n    \"username\": \"{{adminEmail}}\",\n    \"roles\": [1]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/auth/signup",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"auth",
+								"signup"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ADMIN SIGN IN",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "5b60e0c2-fe23-4d39-8682-42c9411f6a74",
+								"exec": [
+									"response_data = JSON.parse(responseBody);",
+									"token = response_data.data.token",
+									"pm.environment.set(\"adminToken\", token);",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"username\": \"{{adminEmail}}\", \"password\": \"{{adminPassword}}\", \"role_id\": [1, 9, 15, 7, 17]}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/auth/signin",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"auth",
+								"signin"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CREATE COMPANY",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "f6f99f54-1ec5-4b9b-9e05-7ae5237789f9",
+								"exec": [
+									"response_data = JSON.parse(responseBody);",
+									"companyId = response_data.data.id",
+									"companyCode = response_data.data.code",
+									"pm.environment.set(\"companyId\", companyId);",
+									"pm.environment.set(\"companyCode\", companyCode);",
+									"pm.environment.set(\"count\", 1);",
+									"",
+									"",
+									"pm.test(\"Status code is 201\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{adminToken}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"{{$randomCatchPhrase}}\", \n    \"code\":\"{{$randomCatchPhrase}}\"\n}"
+						},
+						"url": {
+							"raw": "{{baseurl}}/company",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"company"
+							]
+						},
+						"description": "create company"
+					},
+					"response": []
+				},
+				{
+					"name": "CREATE BUSINESS UNIT",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "63003be4-f751-454d-b73f-25de6094441d",
+								"exec": [
+									"adminEmail = pm.variables.replaceIn('{{$randomAdjective}}')",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "556e5782-af7d-4278-9ea7-4c50c382182f",
+								"exec": [
+									"responseBody = JSON.parse(responseBody)",
+									"buisnessUnitId = responseBody.data.unit.id",
+									"pm.environment.set(\"buisnessUnitId\", buisnessUnitId);",
+									"",
+									"var currentCount = pm.environment.get(\"count\")",
+									"if (currentCount > 0){",
+									" currentCount = currentCount -1 ;",
+									" pm.environment.set(\"count\", currentCount);",
+									" postman.setNextRequest(\"CREATE BUSINESS UNIT\");",
+									"}",
+									"",
+									"pm.test(\"Status code is 201\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{adminToken}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"{{$randomLastName}}\",\n\t\"company_id\": {{companyId}}\n}"
+						},
+						"url": {
+							"raw": "{{baseurl}}/businessUnit",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"businessUnit"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CREATE LOCATION",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "98c64690-a5ce-4249-ae10-f0f8c0c28250",
+								"exec": [
+									"companyName = pm.variables.replaceIn('{{$randomCompanyName}}')",
+									"pm.environment.set(\"companyName\", companyName);",
+									"",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "e46407cf-6c8b-4933-b2f7-491d2bf0dcb5",
+								"exec": [
+									"responseBody = JSON.parse(responseBody);",
+									"pm.environment.set(\"locationId\", responseBody.data.location.id);",
+									"",
+									"",
+									"pm.test(\"verify company name returned in the response is equal to the one given in the request\", function () {",
+									"    pm.expect(responseBody.data.location.name).to.eql(pm.environment.get(\"companyName\"))",
+									"});",
+									"",
+									"pm.test(\"Status code is 201\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{adminToken}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"{{companyName}}\",\n\t\"company_id\": \"{{companyId}}\",\n\t\"business_unit_id\": \"{{buisnessUnitId}}\",\n    \"service_charge_type\": \"FLAT\", \n    \"service_charge_value\": 1.2, \n    \"delivery_charge_type\": \"FLAT\", \n    \"delivery_charge_value\": 1.2\n}"
+						},
+						"url": {
+							"raw": "{{baseurl}}/location",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"location"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CREATE PRODUCT CATEGORY ( SUB CAT INCLUDED )",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "97192233-ac6c-4f8d-bfc6-7cc079d52196",
+								"exec": [
+									"responseBody = JSON.parse(responseBody)",
+									"pm.environment.set(\"categoryId\", responseBody.data.id);",
+									"",
+									"pm.environment.set(\"productsArray\", null);",
+									"pm.environment.set(\"productsToCreate\", 10);",
+									"",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{adminToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"{{$randomAdjective}}\",\n    \"priority\": 1,\n    \"start_date\": \"2020-06-06T19:36:14\",\n    \"end_date\": \"2020-06-06T19:36:14\",\n    \"location_id\": {{locationId}},\n    \"sub_categories\": [\n        {\n            \"name\": \"chips\",\n            \"location_id\": {{locationId}},\n            \"priority\": 1,\n            \"start_date\": \"2020-06-06T19:36:14\",\n            \"end_date\": \"2021-06-06T19:36:14\"\n        },\n        {\n            \"name\": \"biscuits\",\n            \"priority\": 2,\n            \"location_id\": {{locationId}},\n            \"start_date\": \"2020-06-06T19:36:14\",\n            \"end_date\": \"2021-06-06T19:36:14\"\n        }\n    ]\n}"
+						},
+						"url": {
+							"raw": "{{baseurl}}/categories/createProductCategory",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"categories",
+								"createProductCategory"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CREATE PRODUCT",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "5f275105-4f55-4e3e-b8e2-71fc55b30458",
+								"exec": [
+									"productSKU = pm.variables.replaceIn('{{$randomPassword}}')",
+									"pm.environment.set(\"productSKU\" , productSKU);"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "dd63a32e-c2ae-49a0-85bf-c3587ad30bbe",
+								"exec": [
+									"currentCount = pm.environment.get(\"productsToCreate\")",
+									"productsArray = pm.environment.get(\"productsArray\");",
+									"productSKU = pm.environment.get(\"productSKU\")",
+									"",
+									"if(productsArray == null)",
+									"{",
+									"    productsArray = [];",
+									"}",
+									"",
+									"else{",
+									"    productsArray = JSON.parse(productsArray)",
+									"   ",
+									"}",
+									"productsArray.push(productSKU)",
+									"pm.environment.set(\"productsArray\", JSON.stringify(productsArray));",
+									"",
+									"",
+									"if (currentCount > 0){",
+									" currentCount = currentCount -1 ;",
+									" pm.environment.set(\"productsToCreate\", currentCount);",
+									" postman.setNextRequest(\"CREATE PRODUCT\");",
+									"}",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{adminToken}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"sku\": \"{{productSKU}}\",\n    \"name\": \"gala\",\n    \"size\": \"small\",\n    \"unit\": \"pack\",\n    \"stock_quantity\": 100,\n    \"category_id\": [{{categoryId}}],\n    \"brand\": \"LU\",\n    \"urdu_name\": \"test\",\n    \"urdu_unit\": \"kg\",\n    \"urdu_size\": \"small\",\n    \"urdu_brand\": \"test\",\n    \"disabled\": false,\n    \"barcode\": \"test\",\n    \"description\": \"egg biscuits\",\n    \"consent_required\": false,\n    \"location_id\": {{locationId}},\n    \"price\": 20,\n    \"tax_percent\": 0.5,\n    \"tax_inclusive\": false\n}"
+						},
+						"url": {
+							"raw": "{{baseurl}}/product/createProduct",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"product",
+								"createProduct"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		}
+	],
+	"protocolProfileBehavior": {}
+}
