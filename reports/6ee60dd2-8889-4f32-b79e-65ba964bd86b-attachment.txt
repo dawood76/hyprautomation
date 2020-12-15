@@ -1,3 +1,0 @@
-[WDM] - Current google-chrome version is 86.0.4240
-[WDM] - Get LATEST driver version for 86.0.4240
-[WDM] - Driver [/home/dawood/.wdm/drivers/chromedriver/linux64/86.0.4240.22/chromedriver] found in cache
