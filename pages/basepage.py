@@ -29,3 +29,7 @@ class basePage:
     def get_text(self, locator):
         elem = WebDriverWait(self.browser, 20).until(EC.visibility_of_element_located(locator))
         return elem.text
+
+    def get_elem(self, locator):
+        elem = WebDriverWait(self.browser, 20).until(EC.presence_of_element_located(locator))
+        return elem

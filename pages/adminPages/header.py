@@ -10,9 +10,13 @@ class header(basePage):
     }
 
     def __init__(self,driver):
+        self.driver = driver
         super().__init__(driver)
 
     def logout(self):
-        self.click_on_elem(self.locator_button["username"])
-        self.click_on_elem(self.locator_button["logout"])
+        #self.click_on_elem(self.locator_button["username"])
+        elem = self.get_elem(self.locator_button["username"])
+        self.driver.execute_script("arguments[0].click();", elem)
+        elem = self.get_elem(self.locator_button["logout"])
+        self.driver.execute_script("arguments[0].click();", elem)
 
